@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  php:
+    container_name: crmddd_php
+    depends_on:
+      - db
+    build:
+      context: ./etc/php
+      args:
+        - PUID=1000
+        - PGID=1000
+    volumes:
+      - .:/app
+    networks:
+      - main
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./etc/nginx:/etc/nginx/conf.d
+      - .:/app
+    ports:
+      - '80:80'
+    depends_on:
+      - php
+    networks:
+      - main
+  db:
+    container_name: crmddd_db
+    image: postgres:13.4
+    restart: always
+    environment:
+      POSTGRES_DB: crmddd
+      POSTGRES_USER: crmddd
+      POSTGRES_PASSWORD: 123
+    ports:
+      - '5432:5432'
+    networks:
+      - main
+
+networks:
+  main:
