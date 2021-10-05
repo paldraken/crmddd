@@ -4,31 +4,49 @@ declare(strict_types=1);
 
 namespace App\Auth\Company\Domain;
 
+use App\Auth\Company\Domain\Events\CompanyWasRegisteredDomainEvent;
+use App\Auth\User\Domain\User;
 use App\Shared\Domain\AggregateRoot;
-use App\Shared\Domain\ValueObject\Uuid;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class Company extends AggregateRoot
 {
+    /**
+     * @psalm-var Collection<int, User>
+     */
+    private Collection $users;
+
     public function __construct(
         private CompanyId $id,
         private CompanyName $name,
         private DateTimeImmutable $registeredAt
     )
     {
+        $this->users = new ArrayCollection();
     }
 
     public static function create(
         CompanyId $id,
-        CompanyName $name,
+        CompanyName $name
     ): Company
     {
         $registeredAt = new DateTimeImmutable();
 
-        return new Company($id, $name, $registeredAt);
+        $company = new Company($id, $name, $registeredAt);
+
+        $company->record(new CompanyWasRegisteredDomainEvent($id->value(), $name->value()));
+
+        return $company;
     }
 
-    public function id(): Uuid
+    public function addUser(User $user): void
+    {
+        $this->users->add($user);
+    }
+
+    public function id(): CompanyId
     {
         return $this->id;
     }
@@ -41,5 +59,14 @@ class Company extends AggregateRoot
     public function registeredAt(): DateTimeImmutable
     {
         return $this->registeredAt;
+    }
+
+    /**
+     * @return Collection
+     * @psalm-return Collection<int, User>
+     */
+    public function users(): Collection
+    {
+        return $this->users;
     }
 }

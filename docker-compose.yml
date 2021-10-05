@@ -11,6 +11,7 @@ services:
         - PGID=1000
     volumes:
       - .:/app
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     networks:
       - main
   nginx:

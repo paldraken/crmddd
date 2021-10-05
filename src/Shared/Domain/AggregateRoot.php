@@ -22,7 +22,7 @@ abstract class AggregateRoot
     /**
      * @return DomainEvent[]
      */
-    public function release(): array
+    public function releaseEvents(): array
     {
         $stored = $this->recordedEvents;
         $this->recordedEvents = [];

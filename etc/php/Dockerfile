@@ -23,6 +23,8 @@ ENV PGID ${PGID}
 RUN groupmod -o -g ${PGID} www-data && \
     usermod -o -u ${PUID} -g www-data www-data
 
+RUN rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 user 1000
 
 WORKDIR /app

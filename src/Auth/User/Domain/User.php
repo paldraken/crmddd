@@ -4,30 +4,34 @@ declare(strict_types=1);
 
 namespace App\Auth\User\Domain;
 
+use App\Auth\Company\Domain\Company;
 use App\Auth\User\Domain\Errors\NotUniqueEmailError;
+use App\Auth\User\Domain\Events\UserWasCreatedDomainEvent;
 use App\Shared\Domain\AggregateRoot;
 use App\Shared\Domain\ValueObject\Uuid;
 use DateTimeImmutable;
-use Webmozart\Assert\Assert;
+
 
 class User extends AggregateRoot
 {
     public function __construct(
         private UserId $id,
+        private Company $company,
         private UserEmail $email,
         private UserFullName $fullName,
-        private UserHashedPassword $hashedPassword,
+        private string $hashedPassword,
         private DateTimeImmutable $createdAt
     )
     {
     }
 
     public static function create(
-        UserId $id,
-        UserEmail $email,
-        UserFullName $fullName,
-        UserPassword $password,
-        PasswordHasher $passwordHasher,
+        UserId                  $id,
+        Company                 $company,
+        UserEmail               $email,
+        UserFullName            $fullName,
+        UserPassword            $password,
+        UserPasswordHasher      $passwordHasher,
         UniqueUserSpecification $uniqueUserSpecification
     ): self
     {
@@ -35,16 +39,15 @@ class User extends AggregateRoot
             throw new NotUniqueEmailError($email->value());
         }
 
-        $passwordHash = $passwordHasher->hash($password);
+        $passwordHash = $passwordHasher->hash($password->value());
 
         $createdAt = new DateTimeImmutable();
 
-        return new self($id, $email, $fullName, $passwordHash, $createdAt);
-    }
+        $user = new self($id, $company, $email, $fullName, $passwordHash, $createdAt);
 
-    public function validatePassword(UserPassword $password, PasswordHasher $passwordHasher): bool
-    {
-        return $passwordHasher->verify($password, $this->hashedPassword);
+        $user->record(new UserWasCreatedDomainEvent($id->value(), $fullName->value(), $email->value()));
+
+        return $user;
     }
 
     public function changePassword(UserPassword $password): void
@@ -52,6 +55,15 @@ class User extends AggregateRoot
 
     }
 
+    public function equals(User $other): bool
+    {
+        return $this->id->equals($other->id());
+    }
+
+    public function company(): Company
+    {
+        return $this->company;
+    }
 
     public function id(): Uuid
     {
@@ -71,6 +83,11 @@ class User extends AggregateRoot
     public function createdAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function hashedPassword(): string
+    {
+        return $this->hashedPassword;
     }
 
 }

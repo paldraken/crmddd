@@ -15,7 +15,7 @@ class Uuid implements Stringable
         Assert::notFalse(UuidAlias::isValid($this->value));
     }
 
-    public static function generate(): self
+    public static function generate(): static
     {
         return new static(UuidAlias::uuid4()->toString());
     }

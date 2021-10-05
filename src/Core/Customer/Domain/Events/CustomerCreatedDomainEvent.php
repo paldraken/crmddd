@@ -44,16 +44,12 @@ final class CustomerCreatedDomainEvent extends DomainEvent
      */
     function toArray(): array
     {
-        return [
-            'id' => $this->aggregateId(),
-            'attributes' => [
-                'name' => $this->name(),
-                'email' => $this->email(),
-                'phone' => $this->phone()
-            ],
-            'event_id' => $this->eventId(),
-            'occurred_on' => $this->occurredOn()
+        $attributes = [
+            'name' => $this->name(),
+            'email' => $this->email(),
+            'phone' => $this->phone()
         ];
+        return $this->baseToArray($attributes);
     }
 
     public function email(): string

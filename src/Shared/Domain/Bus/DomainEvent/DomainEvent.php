@@ -30,6 +30,16 @@ abstract class DomainEvent
 
     abstract function toArray(): array;
 
+    protected function baseToArray(array $attributes): array
+    {
+        return [
+            'id' => $this->aggregateId(),
+            'attributes' => $attributes,
+            'event_id' => $this->eventId(),
+            'occurred_on' => $this->occurredOn()
+        ];
+    }
+
     public function aggregateId(): string
     {
         return $this->aggregateId;

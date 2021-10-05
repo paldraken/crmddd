@@ -8,6 +8,11 @@
         <id name="id" type="company_id" column="id" length="36" />
         <embedded name="name" class="App\Auth\Company\Domain\CompanyName" use-column-prefix="false" />
         <field name="registeredAt" type="datetime_immutable" column="registered_at" />
+        <one-to-many field="users" target-entity="App\Auth\User\Domain\User" mapped-by="company">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
     </entity>
 
 </doctrine-mapping>

@@ -6,9 +6,15 @@
 
     <entity name="App\Auth\User\Domain\User" table="auth_users">
         <id name="id" type="user_id" column="id" length="36" />
+        <many-to-one field="company" target-entity="App\Auth\Company\Domain\Company" inversed-by="users">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="company_id" referenced-column-name="id" />
+        </many-to-one>
         <embedded name="email" class="App\Auth\User\Domain\UserEmail" use-column-prefix="false" />
         <embedded name="fullName" class="App\Auth\User\Domain\UserFullName" use-column-prefix="false" />
-        <embedded name="hashedPassword" class="App\Auth\User\Domain\UserHashedPassword" use-column-prefix="false" />
+        <field name="hashedPassword" type="string" column="hashed_password" length="512" />
         <field name="createdAt" type="datetime_immutable" column="created_at" />
     </entity>
 
