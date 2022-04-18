@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Core\Pipeline\Domain\Errors;
 
-class AddStageToPiplineDomainError
+use App\Shared\Domain\DomainError;
+
+class AddStageToPipelineDomainError extends DomainError
 {
 
 }

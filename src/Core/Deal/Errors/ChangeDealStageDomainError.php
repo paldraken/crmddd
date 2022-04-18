@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Core\Deal\Errors;
 
-class ChangeDealStageDomainError
+use App\Shared\Domain\DomainError;
+
+class ChangeDealStageDomainError extends DomainError
 {
 
 }

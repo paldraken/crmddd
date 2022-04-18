@@ -55,11 +55,6 @@ class User extends AggregateRoot
 
     }
 
-    public function equals(User $other): bool
-    {
-        return $this->id->equals($other->id());
-    }
-
     public function company(): Company
     {
         return $this->company;

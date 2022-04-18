@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Core\Pipeline\Domain;
 
-class PipelineId
+use App\Shared\Domain\ValueObject\Uuid;
+
+class PipelineId extends Uuid
 {
 
 }

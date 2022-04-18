@@ -7,7 +7,7 @@ namespace App\Shared\Domain;
 use App\Shared\Domain\Bus\DomainEvent\DomainEvent;
 use App\Shared\Domain\ValueObject\Uuid;
 
-abstract class AggregateRoot
+abstract class AggregateRoot implements AggregateRootEquatableInterface
 {
     /** @var DomainEvent[] */
     private array $recordedEvents = [];
@@ -27,5 +27,10 @@ abstract class AggregateRoot
         $stored = $this->recordedEvents;
         $this->recordedEvents = [];
         return $stored;
+    }
+
+    public function equals(AggregateRoot $other): bool
+    {
+        return $this->id()->equals($other->id());
     }
 }

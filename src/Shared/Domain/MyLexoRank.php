@@ -6,5 +6,8 @@ namespace App\Shared\Domain;
 
 class MyLexoRank
 {
+    public static function middle(string $prev, string $next): string
+    {
 
+    }
 }

@@ -7,7 +7,7 @@ RUN apt-get install -y \
         libpq-dev \
         libzip-dev zip unzip;
 
-RUN docker-php-ext-install pdo_pgsql
+RUN docker-php-ext-install pdo_pgsql sockets
 
 
 RUN pecl install xdebug-3.0.4 \
@@ -25,6 +25,6 @@ RUN groupmod -o -g ${PGID} www-data && \
 
 RUN rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-user 1000
+user ${PUID}
 
 WORKDIR /app

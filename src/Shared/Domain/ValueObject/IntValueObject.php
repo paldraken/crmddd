@@ -4,7 +4,14 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\ValueObject;
 
-class IntValueObject
+abstract class IntValueObject
 {
+    public function __construct(protected int $value)
+    {
+    }
 
+    public function value(): int
+    {
+        return $this->value;
+    }
 }
